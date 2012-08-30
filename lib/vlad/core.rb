@@ -181,6 +181,8 @@ namespace :vlad do
 
   remote_task :cleanup do
     max = keep_releases
+    set(:releases) { run("ls -x #{releases_path}").split.select { |string| string =~ /^\d+$/ && string.length == 14 }.sort }
+
     if releases.length <= max then
       puts "no old releases to clean up #{releases.length} <= #{max}"
     else
