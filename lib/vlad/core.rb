@@ -86,20 +86,7 @@ namespace :vlad do
       run commands.join(" && ")
       Rake::Task['vlad:update_symlinks'].invoke
 
-      symlink = true
-      commands = [
-        "umask #{umask}",
-        "rm -f #{current_path}",
-        "ln -s #{latest_release} #{current_path}",
-        "echo #{now} $USER #{revision} #{File.basename(release_path)} >> #{deploy_to}/revisions.log"
-      ]
-      commands << "chown #{perm_owner} #{deploy_to}/revisions.log" if perm_owner
-      commands << "chgrp #{perm_group} #{deploy_to}/revisions.log" if perm_group
-
-      run commands.join(' ; ')
     rescue => e
-      run "rm -f #{current_path} && ln -s #{previous_release} #{current_path}" if
-        symlink
       run "rm -rf #{release_path}"
       raise e
     end
@@ -194,6 +181,21 @@ namespace :vlad do
 
       run "rm -rf #{directories}"
     end
+  end
+
+  desc "Update the current release link".cleanup
+
+  remote_task :update_current_link do
+    commands = [
+      "umask #{umask}",
+      "rm -f #{current_path}",
+      "ln -s #{latest_release} #{current_path}",
+      "echo #{now} $USER #{revision} #{File.basename(release_path)} >> #{deploy_to}/revisions.log"
+    ]
+    commands << "chown #{perm_owner} #{deploy_to}/revisions.log" if perm_owner
+    commands << "chgrp #{perm_group} #{deploy_to}/revisions.log" if perm_group
+
+    run commands.join(' ; ')
   end
 
 end # namespace vlad
