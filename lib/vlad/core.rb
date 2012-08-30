@@ -51,7 +51,7 @@ namespace :vlad do
     commands << "chown #{perm_owner} #{dirs}" if perm_owner
     commands << "chgrp #{perm_group} #{dirs}" if perm_group
 
-    run commands.join(' && ')
+    run commands.join(' ; ')
   end
 
   desc "Updates your application server to the latest revision.  Syncs
@@ -91,12 +91,12 @@ namespace :vlad do
         "umask #{umask}",
         "rm -f #{current_path}",
         "ln -s #{latest_release} #{current_path}",
-        "echo #{now} \"$USER\" #{revision} #{File.basename(release_path)} >> #{deploy_to}/revisions.log"
+        "echo #{now} $USER #{revision} #{File.basename(release_path)} >> #{deploy_to}/revisions.log"
       ]
       commands << "chown #{perm_owner} #{deploy_to}/revisions.log" if perm_owner
       commands << "chgrp #{perm_group} #{deploy_to}/revisions.log" if perm_group
 
-      run commands.join(' && ')
+      run commands.join(' ; ')
     rescue => e
       run "rm -f #{current_path} && ln -s #{previous_release} #{current_path}" if
         symlink
@@ -112,7 +112,7 @@ namespace :vlad do
       ops = shared_paths.map do |sp, rp|
         "ln -s #{shared_path}/#{sp} #{latest_release}/#{rp}"
       end
-      run ops.join(' && ') unless ops.empty?
+      run ops.join(' ; ') unless ops.empty?
     end
   end
 
