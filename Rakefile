@@ -1,23 +1,8 @@
 # -*- ruby -*-
 
-require 'rubygems'
-require 'hoe'
-
-Hoe.plugin :seattlerb
-Hoe.plugin :isolate
-
-Hoe.spec 'vlad' do
-  self.rubyforge_name = 'hitsquad'
-
-  developer 'Ryan Davis',       'ryand-ruby@zenspider.com'
-  developer 'Eric Hodel',       'drbrain@segment7.net'
-  developer 'Wilson Bilkovich', 'wilson@supremetyrant.com'
-
-  dependency 'rake',             '~> 0.8'
-  dependency 'rake-remote_task', '~> 2.0'
-
-  multiruby_skip << "rubinius"
-end
+require 'rake/testtask'
+Rake::TestTask.new
+task :default => :test
 
 desc "quick little hack to see what the state of the nation looks like"
 task :debug do
