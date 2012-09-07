@@ -83,7 +83,7 @@ namespace :vlad do
       commands << "chown -R #{perm_owner} #{latest_release}" if perm_owner
       commands << "chgrp -R #{perm_group} #{latest_release}" if perm_group
 
-      run commands.join(" && ")
+      run commands.join(" ; ")
       Rake::Task['vlad:update_symlinks'].invoke
 
     rescue => e
